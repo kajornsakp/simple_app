@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,8 +16,13 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         useMaterial3: true,
+        brightness: Brightness.light,
         primarySwatch: Colors.blue,
-        primaryColor: Colors.red,
+        primaryColor: Colors.white,
+        primaryTextTheme: GoogleFonts.aBeeZeeTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        fontFamily: GoogleFonts.kanit().fontFamily,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -48,6 +54,9 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         page = buildFavoritePage();
         break;
+      case 2:
+        page = buildPhotoPage();
+        break;
       default:
         page = const Text("Error");
         break;
@@ -62,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
                 BottomNavigationBarItem(
                     icon: Icon(Icons.favorite), label: "Favorite"),
+                BottomNavigationBarItem(icon: Icon(Icons.photo), label: "Photo")
               ],
             )
           : null,
@@ -84,6 +94,10 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  Widget buildPhotoPage() {
+    return Image.asset("assets/image_1.jpeg");
   }
 
   Widget buildFavoritePage() {
@@ -148,7 +162,7 @@ class WordCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(32.0),
         child:
-            Text(word, style: Theme.of(context).primaryTextTheme.displayLarge),
+            Text(word, style: Theme.of(context).primaryTextTheme.displayMedium),
       ),
     );
   }
