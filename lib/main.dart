@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'package:simple_app/components/word_card.dart';
+import 'package:simple_app/screens/card_screen.dart';
+import 'package:simple_app/screens/favorite_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +22,6 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
-        primaryColor: Colors.white,
         primaryTextTheme: GoogleFonts.aBeeZeeTextTheme(
           Theme.of(context).textTheme,
         ),
@@ -45,7 +48,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget page;
     switch (_currentIndex) {
       case 0:
@@ -101,69 +103,32 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget buildFavoritePage() {
-    return ListView(
-      children: favorites.map((e) => ListTile(title: Text(e.asPascalCase))).toList(),
-    );
+    return FavoritePage(favorites: favorites);
   }
 
   Widget buildCardPage() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        WordCard(word: word.asPascalCase),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    favorites.contains(word)
-                        ? favorites.remove(word)
-                        : favorites.add(word);
-                  });
-                },
-                child: favorites.contains(word)
-                    ? const Text("Added")
-                    : const Text("Favorite")),
-            const SizedBox(width: 20),
-            ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    word = WordPair.random();
-                  });
-                },
-                child: const Text("Randomize")),
-          ],
-        ),
-      ],
-    );
+    return CardPage(
+        word: word,
+        isFavorite: favorites.contains(word),
+        onFavoriteTapped: (word) {
+          setState(() {
+            if (favorites.contains(word)) {
+              favorites.remove(word);
+            } else {
+              favorites.add(word);
+            }
+          });
+        },
+        onRandomizeTapped: () {
+          setState(() {
+            word = WordPair.random();
+          });
+        });
   }
 
   void setIndex(int index) {
     setState(() {
       _currentIndex = index;
     });
-  }
-}
-
-class WordCard extends StatelessWidget {
-  const WordCard({
-    super.key,
-    required this.word,
-  });
-
-  final String word;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).primaryColor,
-      child: Padding(
-        padding: const EdgeInsets.all(32.0),
-        child:
-            Text(word, style: Theme.of(context).primaryTextTheme.displayMedium),
-      ),
-    );
   }
 }
